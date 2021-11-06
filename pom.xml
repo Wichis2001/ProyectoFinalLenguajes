@@ -18,6 +18,13 @@
             <artifactId>AbsoluteLayout</artifactId>
             <version>SNAPSHOT</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.jdbm/jdbm -->
+        <dependency>
+            <groupId>org.apache.jdbm</groupId>
+            <artifactId>jdbm</artifactId>
+            <version>3.0-alpha5</version>
+        </dependency>
+
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
