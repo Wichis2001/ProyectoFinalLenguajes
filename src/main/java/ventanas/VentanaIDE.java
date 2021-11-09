@@ -8,6 +8,7 @@ import datos.CargaDatos;
 import datos.GuardarDatos;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,6 +17,7 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
+import manejadores.ManejadoAnalizadorSintactico;
 import manejadores.ManejadorAnalizadorLexico;
 import token.ErroresSintacticos;
 import token.NumeroLinea;
@@ -861,7 +863,24 @@ public class VentanaIDE extends javax.swing.JFrame {
     }//GEN-LAST:event_analizadorLexicoKeyPressed
 
     private void analisisSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analisisSActionPerformed
-        // TODO add your handling code here:
+        ManejadoAnalizadorSintactico manejadorSintactico = new ManejadoAnalizadorSintactico();
+        if (manejadorSintactico != null) {
+            System.out.println("entre1");
+            manejadorSintactico.analisisSintactico(ManejadorAnalizadorLexico.tokenRecopilado);
+            System.out.println("entre2");
+            manejadorSintactico.enlistarErrores(areaErrores);
+            JFileChooser fileChosser = new JFileChooser();
+            if (fileChosser.showDialog(null, "Guardar") == JFileChooser.APPROVE_OPTION) {
+                this.escritorArchivo(fileChosser.getSelectedFile(), manejadorSintactico.getFunciones().getDocumento());
+            }     
+            if (!manejadorSintactico.existenciaError()) {
+                System.out.println("entre2");
+                 
+            }
+        } else {
+            System.out.println("error");
+        }
+        
     }//GEN-LAST:event_analisisSActionPerformed
 
     private void analisisSKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_analisisSKeyPressed
@@ -956,6 +975,17 @@ public class VentanaIDE extends javax.swing.JFrame {
         ErroresSintacticos.caracter.clear();
         ErroresSintacticos.fila.clear();
         ErroresSintacticos.columna.clear();
+    }
+    
+    public void escritorArchivo(File archivo, String texto){
+        FileOutputStream salida;
+        try {
+            salida = new FileOutputStream(archivo);
+        byte [] bytxt = texto.getBytes();
+            salida.write(bytxt);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error al Guardar El Archivo");
+        }
     }
    
     

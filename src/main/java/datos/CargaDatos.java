@@ -10,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.JOptionPane;
-import ventanas.VentanaIDE;
 import ventanas.VentanaPrincipal;
 
 
@@ -20,14 +19,14 @@ import ventanas.VentanaPrincipal;
  */
 public class CargaDatos {
 
+    /**
+     * Este metodo me permite establecer un archivo estatico como file el cual sera el valor a retornar cuando se haga una carga de datos
+     */
     public static File archivoAProcesar;
-    
-
-    
+       
     /**
      * Este constructor me permite hacer la carga de un archivo y poder aplicarla a la ventana deseada, en este caso a la ventana de carga de datos 
-     * @param ventanaCarga
-     * @param v
+     * @param archivoAProcesar
      */
     public CargaDatos(File archivoAProcesar){
         this.archivoAProcesar = archivoAProcesar;
@@ -80,7 +79,5 @@ public class CargaDatos {
         //Establecemos que la carga fue exitosa y cerramos el lector
         JOptionPane.showMessageDialog(null, "Datos cargados con éxito.", "CARGA DE DATOS", JOptionPane.INFORMATION_MESSAGE);
         lector.close();
-    }
-    
-    
+    }   
 }

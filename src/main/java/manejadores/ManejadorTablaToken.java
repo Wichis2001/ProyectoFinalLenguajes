@@ -56,8 +56,8 @@ public class ManejadorTablaToken {
         //Recorremos el array de errores para extraer sus atributos
         for(int x=0; x<ManejadorAnalizadorLexico.tokenRecopilado.size()-1;x++){
             //Asignamos los datos a travez de los atributos de los datos
-            datos[0]= ManejadorAnalizadorLexico.tokenRecopilado.get(x).getTipoToken();
-            datos[1]= nombreParaListado(ManejadorAnalizadorLexico.tokenRecopilado.get(x).getLexema());
+            datos[0]= ManejadorAnalizadorLexico.tokenRecopilado.get(x).getLexema();
+            datos[1]= nombreParaListado(ManejadorAnalizadorLexico.tokenRecopilado.get(x).getTipoToken());
             datos[2]= ManejadorAnalizadorLexico.tokenRecopilado.get(x).getFila();
             datos[3]= ManejadorAnalizadorLexico.tokenRecopilado.get(x).getColumna();
             //Asignamos las filas

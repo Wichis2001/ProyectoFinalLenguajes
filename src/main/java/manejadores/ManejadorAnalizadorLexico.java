@@ -6,7 +6,6 @@
 package manejadores;
 import enums.PalabrasReservadas;
 import java.util.ArrayList;
-import javax.swing.JTextArea;
 import token.Token;
 import ventanas.VentanaPrincipal;
 import token.ErroresSintacticos;
@@ -386,12 +385,12 @@ public class ManejadorAnalizadorLexico {
      */
     private void tipoToken() {
         this.nombreToken.add("id");
-        this.nombreToken.add("NÚMERO DECIMAL");
+        this.nombreToken.add("Numero");
         this.nombreToken.add("Reservada");
         this.nombreToken.add("Literal");
-        this.nombreToken.add("COMENTARIO");
-        this.nombreToken.add("LITERAL");
-        this.nombreToken.add("SIGNO ESPECIAL");
+        this.nombreToken.add("Comentario");
+        this.nombreToken.add("Literal");
+        this.nombreToken.add("Especial");
         this.nombreToken.add("Igual");
         this.nombreToken.add("Agrupacion");
         this.nombreToken.add("Operador");
@@ -487,4 +486,9 @@ public class ManejadorAnalizadorLexico {
         tokenRecopilado.add(tokens);
         VentanaPrincipal.ventana.getAreaTexto().setText(VentanaPrincipal.ventana.getAreaTexto().getText());
     }
+
+    public static ArrayList<Token> getTokenRecopilado() {
+        return tokenRecopilado;
+    }
+    
 }

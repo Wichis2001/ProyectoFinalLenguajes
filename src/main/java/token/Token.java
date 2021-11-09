@@ -21,6 +21,7 @@ public class Token {
     private String tipoToken;
     private int fila;
     private int columna;
+    private String descripcion;
     
     /**
      * Dicho metodo me permite que al momento de crear un nuevo objeto de Token pueda poner hacer un llamado al metodo de agrupacion de Tokens
@@ -36,7 +37,7 @@ public class Token {
      * @param fila
      * @param columna
      */
-    public Token(String lexema, String tipoToken, int fila, int columna) {
+    public Token(String tipoToken, String lexema, int fila, int columna) {
         this.lexema = lexema;
         this.tipoToken = tipoToken;
         this.fila = fila;
@@ -202,5 +203,21 @@ public class Token {
      */
     public void setTipoToken(String tipoToken) {
         this.tipoToken = tipoToken;
+    }
+
+    /**
+     * Este metodo me devuelve la descripcion de un token
+     * @return
+     */
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    /** 
+     * Este metodo me permite cambiar la despripcion que posee un token
+     * @param descripcion
+     */
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 }
