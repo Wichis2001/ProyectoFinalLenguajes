@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
+import manejadores.ManejadorAnalizadorSintactico;
+import token.ErroresSintacitos;
 import token.NumeroLinea;
 import token.TextoIDE;
 
@@ -45,6 +47,10 @@ public class VentanaIDE extends javax.swing.JFrame {
         // Inicializamos los HashMaps
         estadoPrevio = new ConcurrentHashMap<>();
         estadoActual = new ConcurrentHashMap<>();
+        areaErrores.setEditable(false);
+        analisisLexico.setVisible(false);
+        reporteTokens.setVisible(false);
+        reporteErrores.setVisible(false);
     }
 
     /**
@@ -57,14 +63,18 @@ public class VentanaIDE extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
-        salir = new javax.swing.JButton();
+        reporteErrores = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         textoAnalizar = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        areaErrores = new javax.swing.JTextArea();
         posicionText = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        salir1 = new javax.swing.JButton();
+        reporteTokens = new javax.swing.JButton();
+        analisisSintactico = new javax.swing.JButton();
+        analisisLexico = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -88,21 +98,21 @@ public class VentanaIDE extends javax.swing.JFrame {
         jLabel2.setText("ANALIZADOR LÉXICO SINTÁCTICO");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 1040, 70));
 
-        salir.setBackground(new java.awt.Color(255, 153, 51));
-        salir.setFont(new java.awt.Font("Ubuntu", 3, 24)); // NOI18N
-        salir.setForeground(new java.awt.Color(0, 0, 0));
-        salir.setText("SALIR");
-        salir.addActionListener(new java.awt.event.ActionListener() {
+        reporteErrores.setBackground(new java.awt.Color(255, 153, 51));
+        reporteErrores.setFont(new java.awt.Font("Ubuntu", 3, 24)); // NOI18N
+        reporteErrores.setForeground(new java.awt.Color(0, 0, 0));
+        reporteErrores.setText("Reporte Errores");
+        reporteErrores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                salirActionPerformed(evt);
+                reporteErroresActionPerformed(evt);
             }
         });
-        salir.addKeyListener(new java.awt.event.KeyAdapter() {
+        reporteErrores.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                salirKeyPressed(evt);
+                reporteErroresKeyPressed(evt);
             }
         });
-        getContentPane().add(salir, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 680, 250, 100));
+        getContentPane().add(reporteErrores, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 680, 250, 100));
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/pngwing.com (1).png"))); // NOI18N
         getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 80, -1, -1));
@@ -138,12 +148,12 @@ public class VentanaIDE extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 1030, 490));
 
-        jTextArea2.setBackground(new java.awt.Color(255, 153, 51));
-        jTextArea2.setColumns(20);
-        jTextArea2.setFont(new java.awt.Font("Ubuntu", 3, 15)); // NOI18N
-        jTextArea2.setForeground(new java.awt.Color(0, 0, 0));
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        areaErrores.setBackground(new java.awt.Color(255, 153, 51));
+        areaErrores.setColumns(20);
+        areaErrores.setFont(new java.awt.Font("Ubuntu", 3, 15)); // NOI18N
+        areaErrores.setForeground(new java.awt.Color(255, 51, 51));
+        areaErrores.setRows(5);
+        jScrollPane2.setViewportView(areaErrores);
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 800, 1010, 190));
 
@@ -156,6 +166,70 @@ public class VentanaIDE extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("Lista de Errores:");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 770, -1, -1));
+
+        salir1.setBackground(new java.awt.Color(255, 153, 51));
+        salir1.setFont(new java.awt.Font("Ubuntu", 3, 24)); // NOI18N
+        salir1.setForeground(new java.awt.Color(0, 0, 0));
+        salir1.setText("SALIR");
+        salir1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salir1ActionPerformed(evt);
+            }
+        });
+        salir1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                salir1KeyPressed(evt);
+            }
+        });
+        getContentPane().add(salir1, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 680, 250, 100));
+
+        reporteTokens.setBackground(new java.awt.Color(255, 153, 51));
+        reporteTokens.setFont(new java.awt.Font("Ubuntu", 3, 24)); // NOI18N
+        reporteTokens.setForeground(new java.awt.Color(0, 0, 0));
+        reporteTokens.setText("Reporte Tokens");
+        reporteTokens.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reporteTokensActionPerformed(evt);
+            }
+        });
+        reporteTokens.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                reporteTokensKeyPressed(evt);
+            }
+        });
+        getContentPane().add(reporteTokens, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 680, 250, 100));
+
+        analisisSintactico.setBackground(new java.awt.Color(255, 153, 51));
+        analisisSintactico.setFont(new java.awt.Font("Ubuntu", 3, 24)); // NOI18N
+        analisisSintactico.setForeground(new java.awt.Color(0, 0, 0));
+        analisisSintactico.setText("Analis Sintáctico");
+        analisisSintactico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                analisisSintacticoActionPerformed(evt);
+            }
+        });
+        analisisSintactico.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                analisisSintacticoKeyPressed(evt);
+            }
+        });
+        getContentPane().add(analisisSintactico, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 680, 250, 100));
+
+        analisisLexico.setBackground(new java.awt.Color(255, 153, 51));
+        analisisLexico.setFont(new java.awt.Font("Ubuntu", 3, 24)); // NOI18N
+        analisisLexico.setForeground(new java.awt.Color(0, 0, 0));
+        analisisLexico.setText("Anlizador Léxico");
+        analisisLexico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                analisisLexicoActionPerformed(evt);
+            }
+        });
+        analisisLexico.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                analisisLexicoKeyPressed(evt);
+            }
+        });
+        getContentPane().add(analisisLexico, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 680, 260, 100));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/24186-naranja.jpg"))); // NOI18N
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1090, 1020));
@@ -273,18 +347,15 @@ public class VentanaIDE extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void salirKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_salirKeyPressed
+    private void reporteErroresKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_reporteErroresKeyPressed
         
-    }//GEN-LAST:event_salirKeyPressed
+    }//GEN-LAST:event_reporteErroresKeyPressed
 
-    private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
-        int response = JOptionPane.showConfirmDialog(this,"¿Quieres salir del Programa?", "SALIR",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
-        if (response==JOptionPane.YES_OPTION){
-            JOptionPane.showMessageDialog(this, "Saliendo...");
-            //Salimos del programa
-            System.exit(0);
-        }
-    }//GEN-LAST:event_salirActionPerformed
+    private void reporteErroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reporteErroresActionPerformed
+        VentanaTablaErrores ventana = new VentanaTablaErrores();
+        ventana.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_reporteErroresActionPerformed
 
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
         int response2 = JOptionPane.showConfirmDialog(this,"¿Quieres generar una nueva ventana de IDE?", "NUEVO",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
@@ -308,6 +379,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                                     estadoPrevio.clear();
                                     programanoenCero=true;
                                     programaGuardado=true;
+                                    this.reiniciarBotones();
                                     textoAnalizar.setText("");
                                     JOptionPane.showMessageDialog(this, "Archivo Nuevo Generado Correctamente", "NUEVO ARCHIVO", JOptionPane.INFORMATION_MESSAGE);
                                 } else {
@@ -325,6 +397,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                         estadoActual.clear();
                         estadoPrevio.clear();
                         programanoenCero=true;
+                        this.reiniciarBotones();
                         programaGuardado=true;
                         textoAnalizar.setText("");
                         JOptionPane.showMessageDialog(this, "Archivo Nuevo Generado Correctamente", "NUEVO ARCHIVO", JOptionPane.INFORMATION_MESSAGE);
@@ -345,6 +418,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                         estadoPrevio.clear();
                         programanoenCero=true;
                         programaGuardado=true;
+                        this.reiniciarBotones();
                         textoAnalizar.setText("");
                         JOptionPane.showMessageDialog(this, "Archivo Nuevo Generado Correctamente", "NUEVO ARCHIVO", JOptionPane.INFORMATION_MESSAGE);
                     } else {
@@ -355,6 +429,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                         programanoenCero=true;
                         programaGuardado=true;
                         textoAnalizar.setText("");
+                        this.reiniciarBotones();
                     }
 
                 }
@@ -367,6 +442,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                     programanoenCero=true;
                     programaGuardado=true;
                     textoAnalizar.setText("");
+                    this.reiniciarBotones();
             }    
         }
     }//GEN-LAST:event_jMenu1MouseClicked
@@ -403,6 +479,7 @@ public class VentanaIDE extends javax.swing.JFrame {
     }//GEN-LAST:event_textoAnalizarKeyPressed
 
     private void rehaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rehaceActionPerformed
+        this.reiniciarBotones();
         System.out.println("---------REDO----------");
         
         int c = 1;
@@ -458,6 +535,7 @@ public class VentanaIDE extends javax.swing.JFrame {
     }//GEN-LAST:event_rehaceActionPerformed
 
     private void deshacerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deshacerActionPerformed
+        this.reiniciarBotones();
         System.out.println("---------UNDO----------");
         
         int c = 1;
@@ -511,6 +589,7 @@ public class VentanaIDE extends javax.swing.JFrame {
     }//GEN-LAST:event_deshacerActionPerformed
 
     private void textoAnalizarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textoAnalizarKeyReleased
+        this.reiniciarBotones();
         programaGuardado=false;
         if(textoAnalizar.getText()!=""){
             //Analizamos si presionamos la tecla de regreso
@@ -550,6 +629,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                             deshacer.setEnabled(false);
                             rehace.setEnabled(false);
                             estadoActual.clear();
+                            this.reiniciarBotones();
                             estadoPrevio.clear();
                             programanoenCero=false;
                             programaGuardado=true;
@@ -577,6 +657,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                 rehace.setEnabled(false);
                 estadoActual.clear();
                 estadoPrevio.clear();
+                this.reiniciarBotones();
                 programanoenCero=false;
                 programaGuardado=true;
             }
@@ -598,6 +679,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, mensaje);
                         deshacer.setEnabled(false);
                         rehace.setEnabled(false);
+                        this.reiniciarBotones();
                         estadoActual.clear();
                         estadoPrevio.clear();
                         programanoenCero=false;
@@ -638,6 +720,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                                     rehace.setEnabled(false);
                                     estadoActual.clear();
                                     estadoPrevio.clear();
+                                    this.reiniciarBotones();
                                     programanoenCero=false;
                                     programaGuardado=true;
                                     textoAnalizar.setText("");
@@ -658,6 +741,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                         estadoPrevio.clear();
                         programanoenCero=false;
                         programaGuardado=true;
+                        this.reiniciarBotones();
                         textoAnalizar.setText("");
                         this.cargarArchivo();
                     }         
@@ -677,6 +761,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                         estadoPrevio.clear();
                         programanoenCero=false;
                         programaGuardado=true;
+                        this.reiniciarBotones();
                         textoAnalizar.setText("");
                         this.cargarArchivo();
                         
@@ -686,6 +771,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                         estadoActual.clear();
                         estadoPrevio.clear();
                         programanoenCero=false;
+                        this.reiniciarBotones();
                         programaGuardado=true;
                         textoAnalizar.setText("");
                         this.cargarArchivo();
@@ -699,6 +785,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                     estadoPrevio.clear();
                     programanoenCero=false;
                     programaGuardado=true;
+                    this.reiniciarBotones();
                     textoAnalizar.setText("");
                     this.cargarArchivo();
             }    
@@ -728,6 +815,58 @@ public class VentanaIDE extends javax.swing.JFrame {
         // Actualizamos el estado
         actualizarEstado(linea, columna);
     }//GEN-LAST:event_textoAnalizarCaretUpdate
+
+    private void salir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salir1ActionPerformed
+        int response = JOptionPane.showConfirmDialog(this,"¿Quieres salir del Programa?", "SALIR",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+        if (response==JOptionPane.YES_OPTION){
+            JOptionPane.showMessageDialog(this, "Saliendo...");
+            //Salimos del programa
+            System.exit(0);
+        }
+    }//GEN-LAST:event_salir1ActionPerformed
+
+    private void salir1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_salir1KeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_salir1KeyPressed
+
+    private void reporteTokensActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reporteTokensActionPerformed
+        VentanaTablaToken ventana= new VentanaTablaToken();
+        ventana.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_reporteTokensActionPerformed
+
+    private void reporteTokensKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_reporteTokensKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_reporteTokensKeyPressed
+
+    private void analisisSintacticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analisisSintacticoActionPerformed
+        if(textoAnalizar.getText()!=""){
+            ManejadorAnalizadorSintactico manejador= new ManejadorAnalizadorSintactico();
+            if(ErroresSintacitos.existenciaErrores==true){
+                reporteErrores.setVisible(true);
+                analisisSintactico.setVisible(false);         
+                areaErrores.setText("");
+                areaErrores.setText("Se han encontrado errores Sintácticos en el aŕea de texto. Da click en el boton de reporte de errores para más informacion");
+            } else {
+                reporteTokens.setVisible(true);
+                analisisLexico.setVisible(true);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,"No hay texto dentro del area para poder realizar un analisis sintactictico", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_analisisSintacticoActionPerformed
+
+    private void analisisSintacticoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_analisisSintacticoKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_analisisSintacticoKeyPressed
+
+    private void analisisLexicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analisisLexicoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_analisisLexicoActionPerformed
+
+    private void analisisLexicoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_analisisLexicoKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_analisisLexicoKeyPressed
 
     /**
      * @param args the command line arguments
@@ -804,9 +943,25 @@ public class VentanaIDE extends javax.swing.JFrame {
     private void actualizarEstado(int linea, int columna) {
         posicionText.setText("Linea: " + linea + " Columna: " + (columna + 1));
     }
+    
+    private void reiniciarBotones(){
+        analisisLexico.setVisible(false);
+        reporteTokens.setVisible(false);
+        reporteErrores.setVisible(false);
+        analisisSintactico.setVisible(true);
+        areaErrores.setText("");
+        ManejadorAnalizadorSintactico.tokenRecopilado.clear();
+        ErroresSintacitos.cadena.clear();
+        ErroresSintacitos.caracter.clear();
+        ErroresSintacitos.fila.clear();
+        ErroresSintacitos.columna.clear();
+    }
    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton analisisLexico;
+    private javax.swing.JButton analisisSintactico;
+    private javax.swing.JTextArea areaErrores;
     private javax.swing.JMenuItem copiarText;
     private javax.swing.JMenuItem deshacer;
     private javax.swing.JLabel jLabel1;
@@ -823,11 +978,12 @@ public class VentanaIDE extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JMenuItem pegarTexto;
     private javax.swing.JLabel posicionText;
     private javax.swing.JMenuItem rehace;
-    private javax.swing.JButton salir;
+    private javax.swing.JButton reporteErrores;
+    private javax.swing.JButton reporteTokens;
+    private javax.swing.JButton salir1;
     private javax.swing.JTextArea textoAnalizar;
     // End of variables declaration//GEN-END:variables
 }
