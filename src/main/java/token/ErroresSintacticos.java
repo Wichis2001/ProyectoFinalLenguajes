@@ -6,13 +6,14 @@
 package token;
 
 import java.util.ArrayList;
+import javax.swing.JTable;
 
 
 /**
  *
  * @author luis
  */
-public class ErroresSintacitos {
+public class ErroresSintacticos {
     
     public static ArrayList<String> cadena = new ArrayList<>();
     public static ArrayList<Character> caracter = new ArrayList<>();
@@ -21,8 +22,7 @@ public class ErroresSintacitos {
     private int filaActual = 1;
     private int columnaActual = 0;
     private String cadenaActual = "";
-    private String tokenEntrada = "";
-    public static boolean existenciaErrores= false;
+    public static boolean existenciaErrores = false;
 
     /**
      * Este metodo se encarga de poder recopilar y almacenar en un array los errores que el analizador sintactico a lagrado almacenar
@@ -35,7 +35,7 @@ public class ErroresSintacitos {
             //Realizamos un aumento de filas y reiniciamos la columna
             this.filaActual++;
             this.columnaActual = 0;
-            this.tokenEntrada = "";
+            this.cadenaActual = "";
         } else {
             //Verificamos si nos encontramos en un estado de error -1 para definir que se encontro un error
             if (estado == -1) {
@@ -46,17 +46,18 @@ public class ErroresSintacitos {
                 this.cadena.add(cadenaActual);
                 this.fila.add(this.filaActual);
                 this.columna.add(this.columnaActual);
-                this.tokenEntrada = "";
+                this.cadenaActual = "";
             } else {
                 this.columnaActual++;
                 if (estado == -2) {
-                    this.tokenEntrada = "";
+                    this.cadenaActual = "";
                 } else {
-                    this.tokenEntrada += caracter;
+                    this.cadenaActual += caracter;
                 }
 
             }
         }
+        
     }
 
     public boolean existenciaErrores() {

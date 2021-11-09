@@ -16,8 +16,8 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
-import manejadores.ManejadorAnalizadorSintactico;
-import token.ErroresSintacitos;
+import manejadores.ManejadorAnalizadorLexico;
+import token.ErroresSintacticos;
 import token.NumeroLinea;
 import token.TextoIDE;
 
@@ -48,7 +48,7 @@ public class VentanaIDE extends javax.swing.JFrame {
         estadoPrevio = new ConcurrentHashMap<>();
         estadoActual = new ConcurrentHashMap<>();
         areaErrores.setEditable(false);
-        analisisLexico.setVisible(false);
+        analisisS.setVisible(false);
         reporteTokens.setVisible(false);
         reporteErrores.setVisible(false);
     }
@@ -73,8 +73,8 @@ public class VentanaIDE extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         salir1 = new javax.swing.JButton();
         reporteTokens = new javax.swing.JButton();
-        analisisSintactico = new javax.swing.JButton();
-        analisisLexico = new javax.swing.JButton();
+        analizadorLexico = new javax.swing.JButton();
+        analisisS = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -199,37 +199,37 @@ public class VentanaIDE extends javax.swing.JFrame {
         });
         getContentPane().add(reporteTokens, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 680, 250, 100));
 
-        analisisSintactico.setBackground(new java.awt.Color(255, 153, 51));
-        analisisSintactico.setFont(new java.awt.Font("Ubuntu", 3, 24)); // NOI18N
-        analisisSintactico.setForeground(new java.awt.Color(0, 0, 0));
-        analisisSintactico.setText("Analis Sintáctico");
-        analisisSintactico.addActionListener(new java.awt.event.ActionListener() {
+        analizadorLexico.setBackground(new java.awt.Color(255, 153, 51));
+        analizadorLexico.setFont(new java.awt.Font("Ubuntu", 3, 24)); // NOI18N
+        analizadorLexico.setForeground(new java.awt.Color(0, 0, 0));
+        analizadorLexico.setText("Analizador Léxico");
+        analizadorLexico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                analisisSintacticoActionPerformed(evt);
+                analizadorLexicoActionPerformed(evt);
             }
         });
-        analisisSintactico.addKeyListener(new java.awt.event.KeyAdapter() {
+        analizadorLexico.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                analisisSintacticoKeyPressed(evt);
+                analizadorLexicoKeyPressed(evt);
             }
         });
-        getContentPane().add(analisisSintactico, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 680, 250, 100));
+        getContentPane().add(analizadorLexico, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 680, 250, 100));
 
-        analisisLexico.setBackground(new java.awt.Color(255, 153, 51));
-        analisisLexico.setFont(new java.awt.Font("Ubuntu", 3, 24)); // NOI18N
-        analisisLexico.setForeground(new java.awt.Color(0, 0, 0));
-        analisisLexico.setText("Anlizador Léxico");
-        analisisLexico.addActionListener(new java.awt.event.ActionListener() {
+        analisisS.setBackground(new java.awt.Color(255, 153, 51));
+        analisisS.setFont(new java.awt.Font("Ubuntu", 3, 24)); // NOI18N
+        analisisS.setForeground(new java.awt.Color(0, 0, 0));
+        analisisS.setText("Anlizador Sintáctico");
+        analisisS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                analisisLexicoActionPerformed(evt);
+                analisisSActionPerformed(evt);
             }
         });
-        analisisLexico.addKeyListener(new java.awt.event.KeyAdapter() {
+        analisisS.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                analisisLexicoKeyPressed(evt);
+                analisisSKeyPressed(evt);
             }
         });
-        getContentPane().add(analisisLexico, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 680, 260, 100));
+        getContentPane().add(analisisS, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 680, 260, 100));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/24186-naranja.jpg"))); // NOI18N
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1090, 1020));
@@ -839,34 +839,34 @@ public class VentanaIDE extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_reporteTokensKeyPressed
 
-    private void analisisSintacticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analisisSintacticoActionPerformed
-        if(textoAnalizar.getText()!=""){
-            ManejadorAnalizadorSintactico manejador= new ManejadorAnalizadorSintactico();
-            if(ErroresSintacitos.existenciaErrores==true){
+    private void analizadorLexicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analizadorLexicoActionPerformed
+        if(textoAnalizar.getText().isEmpty()!=true){
+            ManejadorAnalizadorLexico manejador= new ManejadorAnalizadorLexico();
+            if(ErroresSintacticos.existenciaErrores==true){
                 reporteErrores.setVisible(true);
-                analisisSintactico.setVisible(false);         
+                analizadorLexico.setVisible(false);         
                 areaErrores.setText("");
-                areaErrores.setText("Se han encontrado errores Sintácticos en el aŕea de texto. Da click en el boton de reporte de errores para más informacion");
+                areaErrores.setText("Se han encontrado errores Léxicos en el aŕea de texto. Da click en el boton de reporte de errores para más informacion");
             } else {
                 reporteTokens.setVisible(true);
-                analisisLexico.setVisible(true);
+                analisisS.setVisible(true);
             }
         } else {
-            JOptionPane.showMessageDialog(this,"No hay texto dentro del area para poder realizar un analisis sintactictico", "ERROR", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,"No hay texto dentro del area para poder realizar un analisis Léxico", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_analisisSintacticoActionPerformed
+    }//GEN-LAST:event_analizadorLexicoActionPerformed
 
-    private void analisisSintacticoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_analisisSintacticoKeyPressed
+    private void analizadorLexicoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_analizadorLexicoKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_analisisSintacticoKeyPressed
+    }//GEN-LAST:event_analizadorLexicoKeyPressed
 
-    private void analisisLexicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analisisLexicoActionPerformed
+    private void analisisSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analisisSActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_analisisLexicoActionPerformed
+    }//GEN-LAST:event_analisisSActionPerformed
 
-    private void analisisLexicoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_analisisLexicoKeyPressed
+    private void analisisSKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_analisisSKeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_analisisLexicoKeyPressed
+    }//GEN-LAST:event_analisisSKeyPressed
 
     /**
      * @param args the command line arguments
@@ -945,22 +945,23 @@ public class VentanaIDE extends javax.swing.JFrame {
     }
     
     private void reiniciarBotones(){
-        analisisLexico.setVisible(false);
+        analisisS.setVisible(false);
         reporteTokens.setVisible(false);
         reporteErrores.setVisible(false);
-        analisisSintactico.setVisible(true);
+        analizadorLexico.setVisible(true);
         areaErrores.setText("");
-        ManejadorAnalizadorSintactico.tokenRecopilado.clear();
-        ErroresSintacitos.cadena.clear();
-        ErroresSintacitos.caracter.clear();
-        ErroresSintacitos.fila.clear();
-        ErroresSintacitos.columna.clear();
+        ErroresSintacticos.existenciaErrores = false;
+        ManejadorAnalizadorLexico.tokenRecopilado.clear();
+        ErroresSintacticos.cadena.clear();
+        ErroresSintacticos.caracter.clear();
+        ErroresSintacticos.fila.clear();
+        ErroresSintacticos.columna.clear();
     }
    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton analisisLexico;
-    private javax.swing.JButton analisisSintactico;
+    private javax.swing.JButton analisisS;
+    private javax.swing.JButton analizadorLexico;
     private javax.swing.JTextArea areaErrores;
     private javax.swing.JMenuItem copiarText;
     private javax.swing.JMenuItem deshacer;

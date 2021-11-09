@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import javax.swing.JTextArea;
 import token.Token;
 import ventanas.VentanaPrincipal;
-import token.ErroresSintacitos;
+import token.ErroresSintacticos;
 /**
  *
  * @author luis
  */
-public class ManejadorAnalizadorSintactico {
+public class ManejadorAnalizadorLexico {
     
-    ErroresSintacitos errores= new ErroresSintacitos();
+    ErroresSintacticos errores= new ErroresSintacticos();
     private String texto;
     private Token token= new Token();
     private final String SALTO = "\n";
@@ -123,7 +123,7 @@ public class ManejadorAnalizadorSintactico {
     }
     
 
-    public ManejadorAnalizadorSintactico() {
+    public ManejadorAnalizadorLexico() {
         this.asignacionErroresSintacticos();
         this.tipoToken();
         this.analisisSintactico();

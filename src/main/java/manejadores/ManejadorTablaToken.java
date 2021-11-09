@@ -9,7 +9,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import manejadores.ManejadorAnalizadorSintactico;
+import manejadores.ManejadorAnalizadorLexico;
 import token.Token;
 import ventanas.VentanaTablaToken;
 
@@ -54,12 +54,12 @@ public class ManejadorTablaToken {
         int i=1;
         modelo.setRowCount(0);
         //Recorremos el array de errores para extraer sus atributos
-        for(int x=0; x<ManejadorAnalizadorSintactico.tokenRecopilado.size()-1;x++){
+        for(int x=0; x<ManejadorAnalizadorLexico.tokenRecopilado.size()-1;x++){
             //Asignamos los datos a travez de los atributos de los datos
-            datos[0]= ManejadorAnalizadorSintactico.tokenRecopilado.get(x).getTipoToken();
-            datos[1]= ManejadorAnalizadorSintactico.tokenRecopilado.get(x).getLexema();
-            datos[2]= ManejadorAnalizadorSintactico.tokenRecopilado.get(x).getFila();
-            datos[3]= ManejadorAnalizadorSintactico.tokenRecopilado.get(x).getColumna();
+            datos[0]= ManejadorAnalizadorLexico.tokenRecopilado.get(x).getTipoToken();
+            datos[1]= nombreParaListado(ManejadorAnalizadorLexico.tokenRecopilado.get(x).getLexema());
+            datos[2]= ManejadorAnalizadorLexico.tokenRecopilado.get(x).getFila();
+            datos[3]= ManejadorAnalizadorLexico.tokenRecopilado.get(x).getColumna();
             //Asignamos las filas
             modelo.addRow(datos);
         }
@@ -70,5 +70,55 @@ public class ManejadorTablaToken {
         tabla.getColumnModel().getColumn(2).setCellRenderer(alinear);
         tabla.getColumnModel().getColumn(3).setCellRenderer(alinear);
         tabla.setModel(modelo);
+    }
+    
+    public String nombreParaListado(String tipoToken) {
+        //Obtenemos el tipo de token, y le asignamos el tipo de token conforme al resultado que obtuvimos
+        switch (tipoToken) {
+            case "id":
+                tipoToken = "IDENTIFICADOR";
+                break;
+            case "ESCRIBIR":
+                tipoToken = "PALABRA RESERVADA";
+                break;
+            case "FIN":
+                tipoToken = "PALABRA RESERVADA";
+                break;
+            case "REPETIR":
+                tipoToken = "PALABRA RESERVADA";
+                break;
+            case "INICIAR":
+                tipoToken = "PALABRA RESERVADA";
+                break;
+            case "SI":
+                tipoToken = "PALABRA RESERVADA";
+                break;
+            case "VERDADERO":
+                tipoToken = "PALABRA RESERVADA";
+                break;
+            case "FALSO":
+                tipoToken = "PALABRA RESERVADA";
+                break;
+            case "ENTONCES":
+                tipoToken = "PALABRA RESERVADA";
+                break;
+            case "=":
+                tipoToken = "SIGNO IGUAL";
+                break;
+            case "+":
+                tipoToken = "OPERADOR MATEMÁTICO";
+                break;
+            case "*":
+                tipoToken = "OPERADOR MATEMÁTICO";
+                break;
+            case "(":
+                tipoToken = "AGRUPACION MATEMÁTICO";
+                break;
+            case ")":
+                tipoToken = "AGRUPACION MATEMÁTICO";
+                break;
+        }
+
+        return tipoToken;
     }
 }

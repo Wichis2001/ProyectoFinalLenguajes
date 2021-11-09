@@ -49,7 +49,7 @@ public class VentanaTablaErrores extends javax.swing.JFrame {
         salir = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabla = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -60,7 +60,7 @@ public class VentanaTablaErrores extends javax.swing.JFrame {
         jLabel2.setText("REPORTE DE ERRORES");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 10, 730, -1));
 
-        salir.setBackground(new java.awt.Color(0, 153, 153));
+        salir.setBackground(new java.awt.Color(255, 153, 51));
         salir.setFont(new java.awt.Font("Ubuntu", 3, 18)); // NOI18N
         salir.setForeground(new java.awt.Color(0, 0, 0));
         salir.setText("Regresar");
@@ -76,7 +76,7 @@ public class VentanaTablaErrores extends javax.swing.JFrame {
         });
         getContentPane().add(salir, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 490, 170, 90));
 
-        tabla.setBackground(new java.awt.Color(0, 153, 153));
+        tabla.setBackground(new java.awt.Color(255, 153, 51));
         tabla.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -93,8 +93,8 @@ public class VentanaTablaErrores extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 100, 740, 370));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/FondoGranja.jpg"))); // NOI18N
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 930, 600));
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/24186-naranja.jpg"))); // NOI18N
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 910, 600));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -115,8 +115,8 @@ public class VentanaTablaErrores extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton salir;
     private javax.swing.JTable tabla;
