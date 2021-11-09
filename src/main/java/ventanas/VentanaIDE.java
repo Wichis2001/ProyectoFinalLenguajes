@@ -865,18 +865,17 @@ public class VentanaIDE extends javax.swing.JFrame {
     private void analisisSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analisisSActionPerformed
         ManejadoAnalizadorSintactico manejadorSintactico = new ManejadoAnalizadorSintactico();
         if (manejadorSintactico != null) {
-            System.out.println("entre1");
             manejadorSintactico.analisisSintactico(ManejadorAnalizadorLexico.tokenRecopilado);
-            System.out.println("entre2");
             manejadorSintactico.enlistarErrores(areaErrores);
             JFileChooser fileChosser = new JFileChooser();
-            if (fileChosser.showDialog(null, "Guardar") == JFileChooser.APPROVE_OPTION) {
-                this.escritorArchivo(fileChosser.getSelectedFile(), manejadorSintactico.getFunciones().getDocumento());
-            }     
             if (!manejadorSintactico.existenciaError()) {
-                System.out.println("entre2");
-                 
-            }
+                JOptionPane.showMessageDialog(this, "Se ha creado un archivo de salida, escoge la carpeta donde quieres almacenarlo", "GUARDAR", JOptionPane.INFORMATION_MESSAGE);
+                if (fileChosser.showDialog(null, "GUARDAR ANALIZADOR SINTACTICO") == JFileChooser.APPROVE_OPTION) {
+                    this.escritorArchivo(fileChosser.getSelectedFile(), manejadorSintactico.getFunciones().getDocumento());
+                }            
+            } else{
+                    JOptionPane.showMessageDialog(this, "Se han encontrado errores Sintacticos", "ERROR", JOptionPane.ERROR_MESSAGE);
+                }    
         } else {
             System.out.println("error");
         }
