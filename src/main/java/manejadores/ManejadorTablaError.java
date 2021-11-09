@@ -8,7 +8,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import token.ErroresSintacticos;
+import token.ErroresLexicos;
 import ventanas.VentanaTablaErrores;
 
 /**
@@ -52,8 +52,8 @@ public class ManejadorTablaError {
         Object[] datos= new Object[modelo.getColumnCount()];
         modelo.setRowCount(0);
         //Recorremos el array de errores para extraer sus atributos
-        for (String cadena : ErroresSintacticos.cadena) {
-            modelo.addRow(new Object[]{cadena, ErroresSintacticos.caracter.get(index), ErroresSintacticos.fila.get(index), ErroresSintacticos.columna.get(index)});
+        for (String cadena : ErroresLexicos.cadena) {
+            modelo.addRow(new Object[]{cadena, ErroresLexicos.caracter.get(index), ErroresLexicos.fila.get(index), ErroresLexicos.columna.get(index)});
             index++;
         }
         //Centramos los atributos obtenidos por la tabla

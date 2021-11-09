@@ -5,11 +5,10 @@
  */
 
 package ventanas;
-
 import javax.swing.JOptionPane;
 
 /**
- *
+ * Esta ventana se encarga de proporcionar informacion del usuario que desarrollo la aplicación
  * @author luis
  */
 public class VentanaInformativa extends javax.swing.JFrame {

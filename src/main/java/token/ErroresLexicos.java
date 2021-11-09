@@ -4,29 +4,45 @@
  * and open the template in the editor.
  */
 package token;
-
 import java.util.ArrayList;
-import javax.swing.JTable;
-
 
 /**
- *
+ * Esta clase se encarga de poder almacenar los distintos erroes lexicos que se presentaron al momento de desarrollar el programa
  * @author luis
  */
-public class ErroresSintacticos {
+public class ErroresLexicos {
     
+    /**
+     * Este array estatico se encarga de almacenar la cadena que contiene el error 
+     */
     public static ArrayList<String> cadena = new ArrayList<>();
+
+    /**
+     * Este array estatico se encarga de poder almacenar el caracter que contiene el error para poder almacenar dicho errror
+     */
     public static ArrayList<Character> caracter = new ArrayList<>();
+
+    /**
+     * Este array se encarga de poder almacenar la posicion de la fila en la cual esta ubicado el error
+     */
     public static ArrayList<Integer> fila = new ArrayList<>();
+
+    /**
+     * Este array se encarga de almacenar la columna en la cual esta ubicada el error
+     */
     public static ArrayList<Integer> columna = new ArrayList<>();
     private int filaActual = 1;
     private int columnaActual = 0;
     private String cadenaActual = "";
+
+    /**
+     * Esta variable estatica me indica la existencia o no de errores lexicos al momento de leer el programa
+     */
     public static boolean existenciaErrores = false;
 
     /**
      * Este metodo se encarga de poder recopilar y almacenar en un array los errores que el analizador sintactico a lagrado almacenar
-     * @param Caracter
+     * @param caracter
      * @param estado 
      */
     public void recopilarErroesAnalizador(char caracter, int estado) {
@@ -48,18 +64,22 @@ public class ErroresSintacticos {
                 this.columna.add(this.columnaActual);
                 this.cadenaActual = "";
             } else {
+                //En caso contrario aumentamos el valor de la columna
                 this.columnaActual++;
+                //Verificamos si el estado es igual a -2
                 if (estado == -2) {
                     this.cadenaActual = "";
                 } else {
                     this.cadenaActual += caracter;
                 }
-
             }
-        }
-        
+        }       
     }
 
+    /**
+     * Este metodo me devuelve el valor booleano que contiene la variable de existencia de errores
+     * @return
+     */
     public boolean existenciaErrores() {
         return existenciaErrores;
     }

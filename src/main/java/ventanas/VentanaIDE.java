@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import manejadores.ManejadoAnalizadorSintactico;
 import manejadores.ManejadorAnalizadorLexico;
-import token.ErroresSintacticos;
+import token.ErroresLexicos;
 import token.NumeroLinea;
 import token.TextoIDE;
 
@@ -32,7 +32,15 @@ public class VentanaIDE extends javax.swing.JFrame {
     private String archivoALeer;
     ConcurrentHashMap<Integer, TextoIDE> estadoPrevio;
     ConcurrentHashMap<Integer, TextoIDE> estadoActual;
+
+    /**
+     * Esta variable representa el texto que se utilizara para poder analizar lexica y sintacticamente dicho proceso
+     */
     public String texto="";
+
+    /**
+     * Esta variable estatica me permite poder determinar el archivo que se empleare para poder guardar dicho archivo
+     */
     public static File archivo;
     boolean programaGuardado=true;
     boolean programanoenCero=true;
@@ -354,6 +362,7 @@ public class VentanaIDE extends javax.swing.JFrame {
     }//GEN-LAST:event_reporteErroresKeyPressed
 
     private void reporteErroresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reporteErroresActionPerformed
+        //Mostramos la ventana de tabla de errores
         VentanaTablaErrores ventana = new VentanaTablaErrores();
         ventana.setVisible(true);
         this.setVisible(false);
@@ -362,18 +371,25 @@ public class VentanaIDE extends javax.swing.JFrame {
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
         int response2 = JOptionPane.showConfirmDialog(this,"¿Quieres generar una nueva ventana de IDE?", "NUEVO",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
         boolean verificar=textoAnalizar.getText().isEmpty();
+        //Verificamos si el usuario desea crear una nueva venta del IDE
         if (response2==JOptionPane.YES_OPTION){
+            //verificamos si no hemos guardado previamente dicho archivo
             if(programaGuardado==false&&(verificar==false)){
+                //Verificamos si se trata de un programa que se ha comenazado desde cero
                 if(programanoenCero==true){
                     int response = JOptionPane.showConfirmDialog(this,"¿Quieres Guardar los Cambios realizados en el archivo?", "GUARDAR",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
                     if (response==JOptionPane.YES_OPTION){
                         JFileChooser seleccionar = new JFileChooser();
+                        //Verificamos si el usuario quiere guardar los datos obtenidos con antelación
                         if(seleccionar.showDialog(null, "Guardar")==JFileChooser.APPROVE_OPTION){
+                            //definimos el archivo donde se almacenara
                             archivo= seleccionar.getSelectedFile();
                             try {
+                                //Obtenemos el texto y guardamos el archivo
                                 String texto= textoAnalizar.getText();
                                 String mensaje= guardar.guardaraArchivo(archivo, texto);
                                 if(mensaje!=null){
+                                    //Reiniciamos el programa
                                     JOptionPane.showMessageDialog(null, mensaje);
                                     deshacer.setEnabled(false);
                                     rehace.setEnabled(false);
@@ -394,6 +410,7 @@ public class VentanaIDE extends javax.swing.JFrame {
 
                         }
                     } else {
+                        //Reiniciamos el programa y establecemos que dichos datos han sido almacenados correctamente
                         deshacer.setEnabled(false);
                         rehace.setEnabled(false);
                         estadoActual.clear();
@@ -405,6 +422,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "Archivo Nuevo Generado Correctamente", "NUEVO ARCHIVO", JOptionPane.INFORMATION_MESSAGE);
                     }         
                 } else {
+                    //Verificamos si el usuario quiere guardar dichos datos
                     int response = JOptionPane.showConfirmDialog(this,"¿Quieres Guardar los Cambios realizados en el archivo?", "GUARDAR",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
                     if (response==JOptionPane.YES_OPTION){
                     try {
@@ -413,6 +431,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                         } catch (IOException ex) {
                             Logger.getLogger(VentanaIDE.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                        //Confirmamos que los datos han sido guardados con éxito y reinicamos el programa
                         JOptionPane.showMessageDialog(this, "Cambios guardados exitosamente :)");
                         deshacer.setEnabled(false);
                         rehace.setEnabled(false);
@@ -424,6 +443,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                         textoAnalizar.setText("");
                         JOptionPane.showMessageDialog(this, "Archivo Nuevo Generado Correctamente", "NUEVO ARCHIVO", JOptionPane.INFORMATION_MESSAGE);
                     } else {
+                        //Reiniciamos el programa
                         deshacer.setEnabled(false);
                         rehace.setEnabled(false);
                         estadoActual.clear();
@@ -436,6 +456,7 @@ public class VentanaIDE extends javax.swing.JFrame {
 
                 }
             } else{
+                    //Reiniciamos el programa tras crear un nuevo archivo
                     JOptionPane.showMessageDialog(this, "Archivo Nuevo Generado Correctamente", "NUEVO ARCHIVO", JOptionPane.INFORMATION_MESSAGE);
                     deshacer.setEnabled(false);
                     rehace.setEnabled(false);
@@ -450,6 +471,7 @@ public class VentanaIDE extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu1MouseClicked
 
     private void copiarTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copiarTextActionPerformed
+        //Este metodo copia el elemento seleccionado por un area de texto
         textoAnalizar.copy();
     }//GEN-LAST:event_copiarTextActionPerformed
 
@@ -481,110 +503,102 @@ public class VentanaIDE extends javax.swing.JFrame {
     }//GEN-LAST:event_textoAnalizarKeyPressed
 
     private void rehaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rehaceActionPerformed
+        //Reiniciamos los botones del programa
         this.reiniciarBotones();
+        //Verificamos los elementos que se extraeran de la pila
         System.out.println("---------REDO----------");
-        
         int c = 1;
+        //Imprimos la accion que se realizo al momento de ejecutar el programa
         for (TextoIDE r:getEstadoActual()) {
             System.out.println(c + " - " + r.getAcccion());
             c++;
         }
-        
+        //Verificamos si el estado actual se encuentra vacio
         if (getEstadoActual().isEmpty())
             return;
-        
+        //Verificamos el estado acutual a travez del tamaño del mismo
         TextoIDE lastReg = estadoActual.get(getEstadoActual().size());
-        
+        //Verificamos si el ultimo registro es igual a nulo
         if (lastReg == null)
             return;
-        
+        //Almacenamos una vaiable como registro antiguo
         TextoIDE oldReg;
         switch(lastReg.getAcccion()) {
-            case "agregar":
-                
+            //Verificamos si se trata de una acción agregar
+            case "agregar":     
                 // Enviamos el evento de inserción al UNDO
                 oldReg = new TextoIDE(lastReg.getTextoToken(), "agregar");
                 agregarEstadoPrevio((getEstadoPrevio().size()+1), oldReg);
-                
                 // Eliminamos el evento anterior del REDO
                 removeNextStates(getEstadoActual().size());
                 break;
             case "eliminar":
-
                 // Enviamos el evento de delete al UNDO
                 oldReg = new TextoIDE(lastReg.getTextoToken(), "eliminar");
                 agregarEstadoPrevio((getEstadoPrevio().size()+1), oldReg);
-                
-                
                 // Eliminamos el evento anterior del REDO
                 removeNextStates(getEstadoActual().size());
                 break;
             default:
                 break;
         }
-        
         System.out.println("---------REDO----------");
-        
         c = 1;
+        //Verificamos que en realidad se haya hecho el reduce a travez de imprimir las acciones que se han llevado a cabo
         for (TextoIDE r:getEstadoActual()) {
             System.out.println(c + " - " + r.getAcccion());
             c++;
         }
-        
         // Refrescamos el contenido de la tabla
         textoAnalizar.setText("");
         textoAnalizar.setText(estadoPrevio.get(getEstadoPrevio().size()).getTextoToken());
     }//GEN-LAST:event_rehaceActionPerformed
 
     private void deshacerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deshacerActionPerformed
+        //Reiniciamos la interfaz gráfica
         this.reiniciarBotones();
         System.out.println("---------UNDO----------");
-        
         int c = 1;
+        //Recorremos el array verificando el estado previo que teniamos al hacer la accion deschacer
         for (TextoIDE r:getEstadoPrevio()) {
             System.out.println(c + " - " + r.getAcccion());
             c++;
         }
-        
+        //Verificamos si el estado previo se encuentra vacio
         if (getEstadoPrevio().isEmpty())
             return;
-        
+        //Establecemos el ultimo registro como el texto que esta presente en el IDE y lo devolvemos
         TextoIDE lastReg = estadoPrevio.get(getEstadoPrevio().size());
-        
+        //Verificamos si el ultimo renglon tiene un estado nulo
         if (lastReg == null)
             return;
-        
+        //Determinamos una nueva variable de antiguo registro
         TextoIDE oldReg;
         switch(lastReg.getAcccion()) {
             case "agregar":
-
                 // Enviamos el evento de inserción al REDO
                 oldReg = new TextoIDE(lastReg.getTextoToken(), "agregar");
-                agregarEstadoActual((getEstadoActual().size()+1), oldReg);
-                
+                agregarEstadoActual((getEstadoActual().size()+1), oldReg);               
                 // Eliminamos el evento anterior del UNDO
                 removePreviusStates(getEstadoPrevio().size());
                 break;
             case "eliminar":
                 // Enviamos el evento delete al REDO
                 oldReg = new TextoIDE(lastReg.getTextoToken(), "eliminar");
-                agregarEstadoActual((getEstadoActual().size()+1), oldReg);
-                
+                agregarEstadoActual((getEstadoActual().size()+1), oldReg);                
                 // Eliminamos el evento anterior del UNDO
                 removePreviusStates(getEstadoPrevio().size());
                 break;
             default:
                 break;
-        }
-        
-        System.out.println("---------UNDO----------");
-        
+        } 
+        System.out.println("---------UNDO----------");       
         c = 1;
+        //Recorremos el arreglo para verificar si en realidad se ha hecho el deshacer 
         for (TextoIDE r:getEstadoPrevio()) {
             System.out.println(c + " - " + r.getAcccion());
             c++;
         }
-        
         // Refrescamos el contenido de la tabla
         textoAnalizar.setText("");
         textoAnalizar.setText(estadoPrevio.get(estadoPrevio.size()).getTextoToken());
@@ -617,16 +631,21 @@ public class VentanaIDE extends javax.swing.JFrame {
     }//GEN-LAST:event_textoAnalizarKeyTyped
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        //Verificamos si se trata de un programa que se ha empezado a hacer de cero
         if(programanoenCero==true){
             int response = JOptionPane.showConfirmDialog(this,"¿Quieres Guardar los Cambios realizados en el archivo?", "GUARDAR",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
+            //Verificamops si el usuario quiere guardar los datos realizados
             if (response==JOptionPane.YES_OPTION){
+                //Dejamos que el usuario almacene el archivo a guardar
                 JFileChooser seleccionar = new JFileChooser();
                 if(seleccionar.showDialog(null, "Guardar")==JFileChooser.APPROVE_OPTION){
                     archivo= seleccionar.getSelectedFile();
                     try {
+                        //Transferimos el archivo de texto como texto a guardar
                         String texto= textoAnalizar.getText();
                         String mensaje= guardar.guardaraArchivo(archivo, texto);
                         if(mensaje!=null){
+                            //Verificamos si el texto se guardo y reiniciamos el programa
                             JOptionPane.showMessageDialog(null, mensaje);
                             deshacer.setEnabled(false);
                             rehace.setEnabled(false);
@@ -638,14 +657,14 @@ public class VentanaIDE extends javax.swing.JFrame {
                         } else {
                             JOptionPane.showMessageDialog(null, "Archivo Incompatible");
                         }
-             
+                    //Error general al momento de intentar guardar el programa
                     } catch (IOException ex) {
                         Logger.getLogger(VentanaIDE.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
                 }
             }          
         } else {
+            //Verificamos si el usuario quierre guradar los cambios que realizo en el archivo
             int response = JOptionPane.showConfirmDialog(this,"¿Quieres Guardar los Cambios realizados en el archivo?", "GUARDAR",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
             if (response==JOptionPane.YES_OPTION){
             try {
@@ -654,6 +673,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                 } catch (IOException ex) {
                     Logger.getLogger(VentanaIDE.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                //Guardamos los datos obtenidos exitosamente
                 JOptionPane.showMessageDialog(this, "Cambios guardados exitosamente :)");
                 deshacer.setEnabled(false);
                 rehace.setEnabled(false);
@@ -669,15 +689,20 @@ public class VentanaIDE extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        //Verificamos si el usuario desea guardar los cambios que almaceno con antelación
         int response = JOptionPane.showConfirmDialog(this,"¿Quieres Guardar los Cambios realizados en el archivo?", "GUARDAR COMO",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
         if (response==JOptionPane.YES_OPTION){
             JFileChooser seleccionar = new JFileChooser();
+            //Dejamos que el usuario seleccione el lugar donde desea almacenar el archivo
             if(seleccionar.showDialog(null, "Guardar")==JFileChooser.APPROVE_OPTION){
                 archivo= seleccionar.getSelectedFile();
                 try {
+                    //Determnamos el elemento a guardar como el texto que esta incluido en el JTextArea
                     String texto= textoAnalizar.getText();
                     String mensaje= guardar.guardaraArchivo(archivo, texto);
+                    //Veriridamos que el elemento se haya guardado correctametne
                     if(mensaje!=null){
+                        //Reiniciamos el programa
                         JOptionPane.showMessageDialog(null, mensaje);
                         deshacer.setEnabled(false);
                         rehace.setEnabled(false);
@@ -689,7 +714,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                     } else {
                         JOptionPane.showMessageDialog(null, "Archivo Incompatible");
                     }
-
+                //Error general al momento de intentar almacenar el archivo
                 } catch (IOException ex) {
                     Logger.getLogger(VentanaIDE.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -705,18 +730,25 @@ public class VentanaIDE extends javax.swing.JFrame {
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
         int response2 = JOptionPane.showConfirmDialog(this,"¿Quieres Abrir un archivo de texto nuevo?", "ABRIR",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
         boolean verificar=textoAnalizar.getText().isEmpty();
+        //Verificamos si el usuario quiere guardar el archivo
         if (response2==JOptionPane.YES_OPTION){
+            //Verificamos si el programa no se ha guardado con antelacion
             if(programaGuardado==false&&(verificar==false)){
+                //Verificamos si se trata de un programa que se a creado en cero
                 if(programanoenCero==true){
+                   //Verificamos si el usuario quiere guardar los cambios realizados en el archivo
                     int response = JOptionPane.showConfirmDialog(this,"¿Quieres Guardar los Cambios realizados en el archivo?", "GUARDAR",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
                     if (response==JOptionPane.YES_OPTION){
                         JFileChooser seleccionar = new JFileChooser();
+                        //Verificamos si el usuario guardo el archivo
                         if(seleccionar.showDialog(null, "Guardar")==JFileChooser.APPROVE_OPTION){
                             archivo= seleccionar.getSelectedFile();
                             try {
+                                //Guardamos en el archivo los elementos estructurados en el JTextArea
                                 String texto= textoAnalizar.getText();
                                 String mensaje= guardar.guardaraArchivo(archivo, texto);
                                 if(mensaje!=null){
+                                    //Reiniciamos el programa
                                     JOptionPane.showMessageDialog(null, mensaje);
                                     deshacer.setEnabled(false);
                                     rehace.setEnabled(false);
@@ -730,13 +762,13 @@ public class VentanaIDE extends javax.swing.JFrame {
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Archivo Incompatible");
                                 }
-
+                            //Error general al momento de guardar el archivo
                             } catch (IOException ex) {
                                 Logger.getLogger(VentanaIDE.class.getName()).log(Level.SEVERE, null, ex);
                             }
-
                         }
                     } else {
+                        //Reiniciamos el programa
                         deshacer.setEnabled(false);
                         rehace.setEnabled(false);
                         estadoActual.clear();
@@ -748,6 +780,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                         this.cargarArchivo();
                     }         
                 } else {
+                    //Verificamos si el usuario quiere guardar el archivo
                     int response = JOptionPane.showConfirmDialog(this,"¿Quieres Guardar los Cambios realizados en el archivo?", "GUARDAR",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
                     if (response==JOptionPane.YES_OPTION){
                     try {
@@ -757,6 +790,7 @@ public class VentanaIDE extends javax.swing.JFrame {
                             Logger.getLogger(VentanaIDE.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         JOptionPane.showMessageDialog(this, "Cambios guardados exitosamente :)");
+                        //Reiniciamos el programa
                         deshacer.setEnabled(false);
                         rehace.setEnabled(false);
                         estadoActual.clear();
@@ -765,9 +799,9 @@ public class VentanaIDE extends javax.swing.JFrame {
                         programaGuardado=true;
                         this.reiniciarBotones();
                         textoAnalizar.setText("");
-                        this.cargarArchivo();
-                        
+                        this.cargarArchivo();                       
                     } else {
+                        //Reiniciamos el programa
                         deshacer.setEnabled(false);
                         rehace.setEnabled(false);
                         estadoActual.clear();
@@ -778,9 +812,9 @@ public class VentanaIDE extends javax.swing.JFrame {
                         textoAnalizar.setText("");
                         this.cargarArchivo();
                     }
-
                 }
             } else{
+                    //Reiniciamos el programa
                     deshacer.setEnabled(false);
                     rehace.setEnabled(false);
                     estadoActual.clear();
@@ -796,12 +830,14 @@ public class VentanaIDE extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu2MouseClicked
 
     private void jMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu4MouseClicked
+        //Desplegamos la ventana de informacion del desarrollador del programa
         this.setVisible(false);
         VentanaInformativa ventana= new VentanaInformativa();
         ventana.setVisible(true);
     }//GEN-LAST:event_jMenu4MouseClicked
 
     private void textoAnalizarCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_textoAnalizarCaretUpdate
+        //Verificamos si se emplea el texto de analizacion de tokens para poder incrementar el numero de fila y columna en la que este se encuentra
         textoAnalizar = (JTextArea)evt.getSource();
         int linea = 1;
         int columna = 1;
@@ -809,7 +845,6 @@ public class VentanaIDE extends javax.swing.JFrame {
             int caretpos = textoAnalizar.getCaretPosition();
             linea= textoAnalizar.getLineOfOffset(caretpos);
             columna = caretpos - textoAnalizar.getLineStartOffset(linea);
-
             // Ya que las líneas las cuenta desde la 0
             linea += 1;
         } catch(Exception ex) { }
@@ -832,6 +867,7 @@ public class VentanaIDE extends javax.swing.JFrame {
     }//GEN-LAST:event_salir1KeyPressed
 
     private void reporteTokensActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reporteTokensActionPerformed
+        //Nos desplazamos a la venta de tokens
         VentanaTablaToken ventana= new VentanaTablaToken();
         ventana.setVisible(true);
         this.setVisible(false);
@@ -842,14 +878,18 @@ public class VentanaIDE extends javax.swing.JFrame {
     }//GEN-LAST:event_reporteTokensKeyPressed
 
     private void analizadorLexicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analizadorLexicoActionPerformed
+        //Verificamos si el texto no ese encuentra vacio
         if(textoAnalizar.getText().isEmpty()!=true){
             ManejadorAnalizadorLexico manejador= new ManejadorAnalizadorLexico();
-            if(ErroresSintacticos.existenciaErrores==true){
+            //Verificamos que no haya existencia de errores al momento de realiazar un analisis lexico
+            if(ErroresLexicos.existenciaErrores==true){
+                //Mostramos ventana de reportes
                 reporteErrores.setVisible(true);
                 analizadorLexico.setVisible(false);         
                 areaErrores.setText("");
                 areaErrores.setText("Se han encontrado errores Léxicos en el aŕea de texto. Da click en el boton de reporte de errores para más informacion");
             } else {
+                //Mostramos el reporte de tokens y el boton para poder ealizar un analisis sintactico
                 reporteTokens.setVisible(true);
                 analisisS.setVisible(true);
             }
@@ -864,11 +904,15 @@ public class VentanaIDE extends javax.swing.JFrame {
 
     private void analisisSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analisisSActionPerformed
         ManejadoAnalizadorSintactico manejadorSintactico = new ManejadoAnalizadorSintactico();
+        //Verificamos que el manejador no tenga un valor nulo
         if (manejadorSintactico != null) {
+            //Realizamos un analisis sintactico a traves de los tokens recopilados con anterioridad
             manejadorSintactico.analisisSintactico(ManejadorAnalizadorLexico.tokenRecopilado);
             manejadorSintactico.enlistarErrores(areaErrores);
             JFileChooser fileChosser = new JFileChooser();
+            //Verificamos que no hayan errore
             if (!manejadorSintactico.existenciaError()) {
+                //Guardamos el archivo generado
                 JOptionPane.showMessageDialog(this, "Se ha creado un archivo de salida, escoge la carpeta donde quieres almacenarlo", "GUARDAR", JOptionPane.INFORMATION_MESSAGE);
                 if (fileChosser.showDialog(null, "GUARDAR ANALIZADOR SINTACTICO") == JFileChooser.APPROVE_OPTION) {
                     this.escritorArchivo(fileChosser.getSelectedFile(), manejadorSintactico.getFunciones().getDocumento());
@@ -887,54 +931,87 @@ public class VentanaIDE extends javax.swing.JFrame {
     }//GEN-LAST:event_analisisSKeyPressed
 
     /**
-     * @param args the command line arguments
+     * @return 
      */
     
     public Collection<TextoIDE> getEstadoPrevio(){
         return estadoPrevio.values();
     }
     
+    /**
+     * Este metotodo me devuelve el estado actual en el que se encuentra el texto empleado en el IDE
+     * @return
+     */
     public Collection<TextoIDE> getEstadoActual(){
         return estadoActual.values();
     }
     
+    /**
+     * Este metodo me ayuda a asignar un estado previo al texto del IDE
+     * @param ID
+     * @param texto
+     * @return
+     */
     public boolean agregarEstadoPrevio(int ID, TextoIDE texto){
        TextoIDE put = estadoPrevio.put(ID, texto);
        deshacer.setEnabled(true);
        return (put!=null);
     }
     
+    /**
+     * Este metodo me ayuda a asignarle un estado actual al texto del IDE
+     * @param ID
+     * @param texto
+     * @return
+     */
     public boolean agregarEstadoActual(int ID, TextoIDE texto){
        TextoIDE put = estadoActual.put(ID, texto);
        rehace.setEnabled(true);
        return (put!=null);
     }
     
+    /**
+     * Este metodo me ayuda a limpiar una lista de los estados actuales que tengo
+     */
     public void limpiarEstadoActual(){
         estadoActual.clear();
         rehace.setEnabled(false);
     }
     
+    /**
+     * Este metodo remueve todos los estados previos que tenia almacenados en el programa
+     * @param key
+     */
     public void removePreviusStates(int key) {
         estadoPrevio.remove(key);
-        
+        //Verificamos que el estado previo no se encuentre vacio
         if (getEstadoPrevio().isEmpty())
             deshacer.setEnabled(false);
         
     }
     
-    
+    /**
+     * Este metodo remueve los siguientes estados dentro del texto
+     * @param key
+     */
     public void removeNextStates(int key) {
         estadoActual.remove(key);
-        
+        //Verificamos si el estado actual se enncuntra vacio
         if (getEstadoActual().isEmpty())
             rehace.setEnabled(false);
     }
     
+    /**
+     * Este metodo me devuelve el area de texto a generar
+     * @return
+     */
     public JTextArea getAreaTexto(){
         return this.textoAnalizar;
     }
     
+    /**
+     * Este metodo me permite poder cargar un archivo de entrada para que este pueda ser interpretado por el IDE
+     */
     public void cargarArchivo(){
         //Agregamos un JFileChooser para poeder hacer la respectiva archovo
         JFileChooser buscarArchivo = new JFileChooser();
@@ -963,19 +1040,25 @@ public class VentanaIDE extends javax.swing.JFrame {
     }
     
     private void reiniciarBotones(){
+        //Reiniciamos el IDE
         analisisS.setVisible(false);
         reporteTokens.setVisible(false);
         reporteErrores.setVisible(false);
         analizadorLexico.setVisible(true);
         areaErrores.setText("");
-        ErroresSintacticos.existenciaErrores = false;
+        ErroresLexicos.existenciaErrores = false;
         ManejadorAnalizadorLexico.tokenRecopilado.clear();
-        ErroresSintacticos.cadena.clear();
-        ErroresSintacticos.caracter.clear();
-        ErroresSintacticos.fila.clear();
-        ErroresSintacticos.columna.clear();
+        ErroresLexicos.cadena.clear();
+        ErroresLexicos.caracter.clear();
+        ErroresLexicos.fila.clear();
+        ErroresLexicos.columna.clear();
     }
     
+    /**
+     * Este metodo me permite poder escribir un archivo con la finalidad de que este pueda ser guardado en el ordenador del usuario
+     * @param archivo
+     * @param texto
+     */
     public void escritorArchivo(File archivo, String texto){
         FileOutputStream salida;
         try {

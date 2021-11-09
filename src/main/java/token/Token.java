@@ -189,8 +189,8 @@ public class Token {
         return fila;
     }
 
-    /* 
-     * Este metodo me devuelve la columna en la que se encuentra un token
+    /**
+     *Este metodo me devuelve la columna en la que se encuentra un token
      * @return
      */
    public int getColumna() {

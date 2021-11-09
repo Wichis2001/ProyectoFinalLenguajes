@@ -8,14 +8,14 @@ import enums.PalabrasReservadas;
 import java.util.ArrayList;
 import token.Token;
 import ventanas.VentanaPrincipal;
-import token.ErroresSintacticos;
+import token.ErroresLexicos;
 /**
- *
+ * Esta clase se encarga de manejar mi analizador lexico con la finalidad de poder juntar una lista de tokens para que estos puedan ser enviados al analizador sintactico
  * @author luis
  */
 public class ManejadorAnalizadorLexico {
     
-    ErroresSintacticos errores= new ErroresSintacticos();
+    ErroresLexicos errores= new ErroresLexicos();
     private String texto;
     private Token token= new Token();
     private final String SALTO = "\n";
@@ -30,6 +30,10 @@ public class ManejadorAnalizadorLexico {
     private int posicion = 0;
     private int estadoActual;
     private String lexemasReporte = "";
+
+    /**
+     * Este array estatico se encarga de almacenar una lista de los tokens los cuales empleare en el uso del programa
+     */
     public static ArrayList<Token> tokenRecopilado = new ArrayList<>();
     private ArrayList<String> lexema = new ArrayList<>();
     private ArrayList<String> nombreToken = new ArrayList<>();
@@ -121,17 +125,22 @@ public class ManejadorAnalizadorLexico {
         matrizTransicion[7][4] = -4; //Traslado al estaddo -4 ya que viene un signo de agrupacion
     }
     
-
+    /**
+     * Este constructor me permite que al momento que cree un analizador lexico pueda llamar a los metodos de erroressintacticos, tipo de token, analiss sintactico
+     */
     public ManejadorAnalizadorLexico() {
         this.asignacionErroresSintacticos();
         this.tipoToken();
-        this.analisisSintactico();
+        this.analisisLexico();
     }
     
     private void asignacionErroresSintacticos(){
+        //Recorremos la matriz de transicion
          for (int i = 0; i < matrizTransicion.length; i++) {
             for (int j = 0; j < matrizTransicion[i].length; j++) {
+                //Verificamos si en la posicion de la matriz tenemos un valor de cero
                 if (matrizTransicion[i][j] == 0) {
+                    //Asignamos un valor de -1 como referencia de que esto se trata de un error
                     matrizTransicion[i][j] = -1;
                 }
             }
@@ -139,6 +148,12 @@ public class ManejadorAnalizadorLexico {
         }
     }
     
+    /**
+     * Este metodo se encarga de manejar las transiciones que tendra mi matriz a partir del estado actual en el que nos encontremos
+     * @param estadoActual
+     * @param caracter
+     * @return
+     */
     public int transicionesMatriz(int estadoActual, char caracter) {
         //Establacemos la posicion inicial como un error sintactico
         int posicion = -1;
@@ -246,7 +261,12 @@ public class ManejadorAnalizadorLexico {
         return reiniciar;
     }
     
-   
+    /**
+     * Este metodo se encarga de la construccion del reporte de tokens para que podamos tener un listado de los distintos tipos de token que obtivimos al analizarlo
+     * @param caracter
+     * @param estado
+     * @param lenght
+     */
     public void construccionReporteTokens(char caracter, int estado, int lenght) {
         
         //Verificamos la posicion en la que se encuentra el token para poder construir dicho token conforme a la posicion en la que este se encuentra
@@ -398,6 +418,9 @@ public class ManejadorAnalizadorLexico {
 
     }
 
+    /**
+     * Este netodo se ebcarga de asignarle un valor a las palabras reservadas a travez de recorrer el array que contiene dichos valores
+     */
     public void pabrasReservadas() {
         //Recorremos la lista de tokens obtenidos
         for (Token token : tokenRecopilado) {
@@ -412,81 +435,51 @@ public class ManejadorAnalizadorLexico {
         }
     }
 
-    public String nombreParaListado(String tipoToken) {
-        //Obtenemos el tipo de token, y le asignamos el tipo de token conforme al resultado que obtuvimos
-        switch (tipoToken) {
-            case "id":
-                tipoToken = "IDENTIFICADOR";
-                break;
-            case "ESCRIBIR":
-                tipoToken = "PALABRA RESERVADA";
-                break;
-            case "FIN":
-                tipoToken = "PALABRA RESERVADA";
-                break;
-            case "REPETIR":
-                tipoToken = "PALABRA RESERVADA";
-                break;
-            case "INICIAR":
-                tipoToken = "PALABRA RESERVADA";
-                break;
-            case "SI":
-                tipoToken = "PALABRA RESERVADA";
-                break;
-            case "VERDADERO":
-                tipoToken = "PALABRA RESERVADA";
-                break;
-            case "FALSO":
-                tipoToken = "PALABRA RESERVADA";
-                break;
-            case "ENTONCES":
-                tipoToken = "PALABRA RESERVADA";
-                break;
-            case "=":
-                tipoToken = "SIGNO IGUAL";
-                break;
-            case "+":
-                tipoToken = "OPERADOR MATEMÁTICO";
-                break;
-            case "*":
-                tipoToken = "OPERADOR MATEMÁTICO";
-                break;
-            case "(":
-                tipoToken = "AGRUPACION MATEMÁTICO";
-                break;
-            case ")":
-                tipoToken = "AGRUPACION MATEMÁTICO";
-                break;
-        }
-
-        return tipoToken;
-    }
-
-    public void analisisSintactico() {
+    /**
+     * Este metodo se encarga de realizarle un analisis lexico al manejador con la finalidad de poder recolectar dicha posicion
+     */
+    public void analisisLexico() {
         this.lexema.clear();
         texto = VentanaPrincipal.ventana.getAreaTexto().getText();
         this.estadoActual = 0;
         char temporal;
+        //Recorremos el texto que se encuentra en un lenght
         while (posicion < texto.length()) {
+            //Recorremos char por char
             temporal = texto.charAt(posicion);
+            //Obtenemos el estado temporal del cual nos desplazaremos a partir de el
             int estadoTemporal = getSiguienteEstado(estadoActual, this.transicionesMatriz(estadoActual, temporal));
+            //Recopilamos los errores obtenidos a travez del estado temporal
             errores.recopilarErroesAnalizador(temporal, estadoTemporal);
+            //Armamos el reporte de dichos tokens
             this.construccionReporteTokens(temporal, estadoTemporal, texto.length());
+            //Si nos encontramos en un estado temporal 10 procedemos asignarle dicho estado un valor de 0
             if (estadoTemporal == 10) {
                 estadoTemporal = 0;
             }
+            //Asignamos el estado actual al estado temporal
             this.estadoActual = estadoTemporal;
+            //Verificamos si es diferente el estado siguiente a comparacion del temporal y el reinicio del mismo
             if (!getNextToken(estadoActual, temporal) || reiniciar(estadoActual)) {
+                //Devolvemos que el estado es 0
                 estadoActual = 0;
             }
             posicion++;
         }
+        //Verificamos las palabras reservadas que fueron asignadas
         this.pabrasReservadas();
+        //Asignamos un token FINALIZAR el cual guiara el movimiento del analizador sintactico
         Token tokens = new Token("FINALIZAR", "FINALIZAR", 0, 0);
+        //lo añadimos a los tokens recopilados
         tokenRecopilado.add(tokens);
+        //Agregamos dicho texto
         VentanaPrincipal.ventana.getAreaTexto().setText(VentanaPrincipal.ventana.getAreaTexto().getText());
     }
 
+    /**
+     * Este metodo me devuelve el array de tokens que fueron recopilados en el transcruso del analizador lexico
+     * @return
+     */
     public static ArrayList<Token> getTokenRecopilado() {
         return tokenRecopilado;
     }

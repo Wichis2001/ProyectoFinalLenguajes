@@ -100,7 +100,7 @@ public class VentanaTablaToken extends javax.swing.JFrame {
         int response = JOptionPane.showConfirmDialog(this,"¿Quieres Regresar a la ventana Anterior?", "REGRESANDO",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE);
         if (response==JOptionPane.YES_OPTION){
             JOptionPane.showMessageDialog(this, "Regresando...");
-            //Salimos del programa
+            //Regreamos a la ventana anterior
             this.setVisible(false);
             VentanaPrincipal.ventana.setVisible(true);
         }

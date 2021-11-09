@@ -72,6 +72,11 @@ public class ManejadorTablaToken {
         tabla.setModel(modelo);
     }
     
+    /**
+     * Este metodo se encarga de asignar un nombre para el listado de cada uno de los tokens, con la finalidad de que estos puedan ser comprensibles por el usuario
+     * @param tipoToken
+     * @return
+     */
     public String nombreParaListado(String tipoToken) {
         //Obtenemos el tipo de token, y le asignamos el tipo de token conforme al resultado que obtuvimos
         switch (tipoToken) {
@@ -117,6 +122,15 @@ public class ManejadorTablaToken {
             case ")":
                 tipoToken = "AGRUPACION MATEMÁTICO";
                 break;
+            case "Numero":
+                tipoToken = "NUMERO DECIMAL";
+                break;    
+            case "Comentario":
+                tipoToken = "COMENTARIO";
+                break;    
+            case "Literal":
+                tipoToken = "LITERAL";
+                break;    
         }
 
         return tipoToken;
