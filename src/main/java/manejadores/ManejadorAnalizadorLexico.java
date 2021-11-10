@@ -271,12 +271,31 @@ public class ManejadorAnalizadorLexico {
         
         //Verificamos la posicion en la que se encuentra el token para poder construir dicho token conforme a la posicion en la que este se encuentra
         switch (estado) {
+            
             case -3:
                 //Verificamos que no venga un token vacio y que este no sea un estado de no aceptacion
                 if (!"".equals(lexemasReporte) && !this.esNoAceptcion(caracter, this.estadoAnterior)) {
                     //Guardamos la posicion en la que se encuentra el token
                     Token tokens = new Token(nombreToken(this.estadoAnterior, lexemasReporte), lexemasReporte, fila, columna);
-                    tokenRecopilado.add(tokens);
+                    //Verificamos si nuestro token contiene un cero
+                    if(tokens.getLexema().charAt(0)=='0'){
+                        //Verficamos si el largo de la cadena es mayor a 1
+                        if(tokens.getLexema().length()>1){
+                            //Agregamos el error
+                            ErroresLexicos.existenciaErrores = true;
+                            ErroresLexicos.caracter.add(tokens.getLexema().charAt(1));
+                            ErroresLexicos.cadena.add(tokens.getLexema());
+                            ErroresLexicos.fila.add(fila);
+                            ErroresLexicos.columna.add(this.columna);
+                        } else {
+                            //Agregamos el token
+                            tokenRecopilado.add(tokens);
+                        }
+                    } else {
+                        //Agregamos el token
+                        tokenRecopilado.add(tokens);
+                    }
+                    
                 }
                 //Aumentamos la posicion de filas y columnas de donde nos encontramos
                 this.fila++;
@@ -288,7 +307,24 @@ public class ManejadorAnalizadorLexico {
                 if (!"".equals(lexemasReporte) && !this.esNoAceptcion(caracter, this.estadoAnterior)) {
                     //Guardamos la posicion en la que se encuentra el token
                     Token tokens = new Token(nombreToken(this.estadoAnterior, lexemasReporte), lexemasReporte, fila, columna);
-                    tokenRecopilado.add(tokens);
+                    //Verificamos si el lexema empieza con una posicon de cero
+                    if(tokens.getLexema().charAt(0)=='0'){
+                        //Verificamos si el largo de la cadena es mayor a 1
+                        if(tokens.getLexema().length()>1){
+                            //Guardamos el error
+                            ErroresLexicos.existenciaErrores = true;
+                            ErroresLexicos.caracter.add(tokens.getLexema().charAt(1));
+                            ErroresLexicos.cadena.add(tokens.getLexema());
+                            ErroresLexicos.fila.add(fila);
+                            ErroresLexicos.columna.add(this.columna);
+                        } else {
+                            //Agregamos el token
+                            tokenRecopilado.add(tokens);
+                        }
+                    } else {
+                        //Agregamos el token
+                        tokenRecopilado.add(tokens);
+                    }
                 }
                 //Aumentamos la posicion de la columna de donde nos encontramos para poder hacer la transicion de cambio de linia
                 this.columna++;
@@ -299,13 +335,47 @@ public class ManejadorAnalizadorLexico {
                 if (!"".equals(lexemasReporte) && !this.esNoAceptcion(caracter, this.estadoAnterior)) {
                     //Guardamos la posicion en la que se encuentra el token
                     Token tokens = new Token(nombreToken(this.estadoAnterior, lexemasReporte), lexemasReporte, fila, columna);
-                    tokenRecopilado.add(tokens);
+                    //Verificamos si la posicion del token es cero
+                    if(tokens.getLexema().charAt(0)=='0'){
+                        //Verificamos si el largo de la cadena es mayor a uno
+                        if(tokens.getLexema().length()>1){
+                            //Agregamos el error
+                            ErroresLexicos.existenciaErrores = true;
+                            ErroresLexicos.caracter.add(tokens.getLexema().charAt(1));
+                            ErroresLexicos.cadena.add(tokens.getLexema());
+                            ErroresLexicos.fila.add(fila);
+                            ErroresLexicos.columna.add(this.columna);
+                        } else {
+                            //Agregamos el error identificado
+                            tokenRecopilado.add(tokens);
+                        }
+                    } else {
+                        //Agregamos el error identificado
+                        tokenRecopilado.add(tokens);
+                    }
                     //Aumentamos la posicion de la columna en la que nos encontramos para demsotrar la transicion en la que nos encontramos
                     this.columna++;
                     this.lexemasReporte = "";
                     //Guardamos la posicion en la que se encuentra el token
                     Token token1 = new Token(nombreToken(10, caracter + ""), caracter + "", fila, columna);
-                    tokenRecopilado.add(token1);
+                    //Verificamos si la primera posicion del token es 1
+                    if(token1.getLexema().charAt(0)=='0'){
+                        //Verificamos si el largo de la cadena es mayor a 1
+                        if(token1.getLexema().length()>1){
+                            //Agregamos el error a la cadena
+                            ErroresLexicos.existenciaErrores = true;
+                            ErroresLexicos.caracter.add(token1.getLexema().charAt(1));
+                            ErroresLexicos.cadena.add(token1.getLexema());
+                            ErroresLexicos.fila.add(fila);
+                            ErroresLexicos.columna.add(this.columna);
+                        } else {
+                            //Agregamos el token recopilado
+                            tokenRecopilado.add(token1);
+                        }
+                    } else {
+                        //Agregamos el token recopilado
+                        tokenRecopilado.add(token1);
+                    }
                     //Aumentamos la posicion de la columna en la que nos encontramos para demsotrar la transicion en la que nos encontramos
                     this.columna++;
                     this.lexemasReporte = "";
@@ -316,7 +386,24 @@ public class ManejadorAnalizadorLexico {
                 if (!this.esNoAceptcion(caracter, this.estadoAnterior)) {
                     //Guardamos la posicion en la que se encuentra el token
                     Token tokens = new Token(nombreToken(10, caracter + ""), caracter + "", fila, columna);
-                    tokenRecopilado.add(tokens);
+                    //Verificamos si la primera posicion del token es cero
+                    if(tokens.getLexema().charAt(0)=='0'){
+                        //Verificamos si el largo de la cadena es mayor a uno
+                        if(tokens.getLexema().length()>1){
+                            //Agregamos el error a sus array correspondientes
+                            ErroresLexicos.existenciaErrores = true;
+                            ErroresLexicos.caracter.add(tokens.getLexema().charAt(1));
+                            ErroresLexicos.cadena.add(tokens.getLexema());
+                            ErroresLexicos.fila.add(fila);
+                            ErroresLexicos.columna.add(this.columna);
+                        } else {
+                            //Agregamos el token recopilado
+                            tokenRecopilado.add(tokens);
+                        }
+                    } else {
+                        //Agregamos el token encontrado
+                        tokenRecopilado.add(tokens);
+                    }
                     //Aumentamos la posicion de la columna en la que nos encontramos para demsotrar la transicion en la que nos encontramos
                     this.columna++;
                     this.lexemasReporte = "";
@@ -330,7 +417,24 @@ public class ManejadorAnalizadorLexico {
                 if (this.contador == lenght - 1 && !this.esNoAceptcion(caracter, estado)) {
                     //Guardamos la posicion en la que se encuentra el token
                     Token tokens = new Token(nombreToken(estado, lexemasReporte), lexemasReporte, fila, columna);
-                    tokenRecopilado.add(tokens);
+                    //Verificamos si en la primera posicion del lexema tenemos un cero
+                    if(tokens.getLexema().charAt(0)=='0'){
+                        //Verificamos si el largo de la cadena es mayor a uno
+                        if(tokens.getLexema().length()>1){
+                            //Agregamos el error
+                            ErroresLexicos.existenciaErrores = true;
+                            ErroresLexicos.caracter.add(tokens.getLexema().charAt(1));
+                            ErroresLexicos.cadena.add(tokens.getLexema());
+                            ErroresLexicos.fila.add(fila);
+                            ErroresLexicos.columna.add(this.columna);
+                        } else {
+                            //Agregamos el token recopilado
+                            tokenRecopilado.add(tokens);
+                        }
+                    } else {
+                        //Agregamos el token recopilado
+                        tokenRecopilado.add(tokens);
+                    }
                 }
 
                 break;
